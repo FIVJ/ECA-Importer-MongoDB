@@ -22,8 +22,12 @@ public class PaymentsConverter {
         mapPayments.put("Function", payment.getFunction());
         mapPayments.put("Month", payment.getMonth());
         mapPayments.put("NIS", payment.getNis());
+        mapPayments.put("Beneficiary", payment.getBeneficiary());
         mapPayments.put("Program", payment.getProgram());
         mapPayments.put("Siafi", payment.getSiafi());
+        mapPayments.put("City", payment.getCity());
+        mapPayments.put("State", payment.getState());
+        mapPayments.put("Region", payment.getRegion());
         mapPayments.put("Source", payment.getSource());
         mapPayments.put("SubFunction", payment.getSubFunction());
         mapPayments.put("Year", payment.getYear());
@@ -41,8 +45,12 @@ public class PaymentsConverter {
         payment.setFunction((int) dbo.get("Function"));
         payment.setMonth((String) dbo.get("Month"));
         payment.setNis((String) dbo.get("NIS"));
+        payment.setBeneficiary((String) dbo.get("Beneficiary"));
         payment.setProgram((int) dbo.get("Program"));
         payment.setSiafi((String) dbo.get("Siafi"));
+        payment.setCity((String) dbo.get("City"));
+        payment.setState((String) dbo.get("State"));
+        payment.setRegion((String) dbo.get("Region"));
         payment.setSource((String) dbo.get("Source"));
         payment.setSubFunction((int) dbo.get("SubFunction"));
         payment.setYear((String) dbo.get("Year"));

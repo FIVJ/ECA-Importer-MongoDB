@@ -94,7 +94,7 @@ public class ImportPaymentsPBF {
                             new BeneficiariesDAO().save(nbeneficiary);
                         }
 
-                        Payments payment = new Payments(action, nis, siafi, file, month, year, function, program, source, subFunction, value);
+                        Payments payment = new Payments(action, nis, beneficiary, siafi, city, state, region, file, month, year, function, program, source, subFunction, value);
 
                         new PaymentsDAO().save(payment);
                     }

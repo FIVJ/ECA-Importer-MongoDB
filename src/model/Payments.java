@@ -11,7 +11,11 @@ public class Payments implements Serializable {
     private String id;
     private int action;
     private String nis;
+    private String beneficiary;
     private String siafi;
+    private String city;
+    private String state;
+    private String region;
     private String file;
     private String month;
     private String year;
@@ -25,10 +29,14 @@ public class Payments implements Serializable {
         super();
     }
 
-    public Payments(int action, String nis, String siafi, String file, String month, String year, int function, int program, String source, int subFunction, Double value) {
+    public Payments(int action, String nis, String beneficiary, String siafi, String city, String state, String region, String file, String month, String year, int function, int program, String source, int subFunction, Double value) {
         this.action = action;
         this.nis = nis;
+        this.beneficiary = beneficiary;
         this.siafi = siafi;
+        this.city = city;
+        this.state = state;
+        this.region = region;
         this.file = file;
         this.month = month;
         this.year = year;
@@ -63,12 +71,44 @@ public class Payments implements Serializable {
         this.nis = nis;
     }
 
+    public String getBeneficiary() {
+        return beneficiary;
+    }
+
+    public void setBeneficiary(String beneficiary) {
+        this.beneficiary = beneficiary;
+    }
+
     public String getSiafi() {
         return siafi;
     }
 
     public void setSiafi(String siafi) {
         this.siafi = siafi;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public String getFile() {
@@ -137,7 +177,7 @@ public class Payments implements Serializable {
 
     @Override
     public String toString() {
-        return "Payments{" + "id=" + id + ", action=" + action + ", nis=" + nis + ", siafi=" + siafi + ", file=" + file + ", month=" + month + ", year=" + year + ", function=" + function + ", program=" + program + ", source=" + source + ", subFunction=" + subFunction + ", value=" + value + '}';
+        return "Payments{" + "id=" + id + ", action=" + action + ", nis=" + nis + ", beneficiary=" + beneficiary + ", siafi=" + siafi + ", city=" + city + ", state=" + state + ", region=" + region + ", file=" + file + ", month=" + month + ", year=" + year + ", function=" + function + ", program=" + program + ", source=" + source + ", subFunction=" + subFunction + ", value=" + value + '}';
     }
 
 }
