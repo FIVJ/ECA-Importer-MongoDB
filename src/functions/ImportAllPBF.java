@@ -1,5 +1,7 @@
 package functions;
 
+import dao.BeneficiariesDAO;
+import dao.CitiesDAO;
 import dao.PaymentsDAO;
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,9 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import model.Beneficiaries;
+import model.Cities;
 import model.Payments;
 import org.apache.log4j.Logger;
 
@@ -19,11 +21,11 @@ import org.apache.log4j.Logger;
  *
  * @author tassio
  */
-public class ImportPaymentsPBF {
+public class ImportAllPBF {
 
     Logger logger = Logger.getLogger("Functions");
 
-    public void importPaymentsPBF() {
+    public void importAllPBF() {
         logger.trace("Starting Method importPaymentsPBF");
         File fInput = new File("/Users/tassio/NetBeansProjects/ECA-Importer-MongoDB/CSV/Pagamentos");
         BufferedReader br = null;
@@ -88,6 +90,28 @@ public class ImportPaymentsPBF {
                         int subFunction = Integer.parseInt(data[4]);
                         double value = Double.parseDouble(data[10]);
 
+                        Map mapCity = new HashMap();
+                        mapCity.put("Siafi", siafi);
+                        Cities ct = new CitiesDAO().findCity(mapCity);
+                        if (ct == null) {
+                            Cities nCity = new Cities();
+                            nCity.setSiafi(siafi);
+                            nCity.setRegion(region);
+                            nCity.setState(state);
+                            nCity.setCity(city);
+                            new CitiesDAO().save(nCity);
+                        }
+
+                        Map mapBeneficiary = new HashMap();
+                        mapBeneficiary.put("NIS", nis);
+                        Beneficiaries bf = new BeneficiariesDAO().findBeneficiary(mapBeneficiary);
+                        if (bf == null) {
+                            Beneficiaries nbeneficiary = new Beneficiaries();
+                            nbeneficiary.setNis(nis);
+                            nbeneficiary.setBeneficiary(beneficiary);
+                            new BeneficiariesDAO().save(nbeneficiary);
+                        }
+
                         Payments payment = new Payments(action, nis, beneficiary, siafi, city, state, region, file, month, year, function, program, source, subFunction, value);
 
                         new PaymentsDAO().save(payment);
@@ -95,7 +119,6 @@ public class ImportPaymentsPBF {
 
                     if (totalimport % 10000 == 0) {
                         System.out.println("Imports = " + totalimport);
-                        System.gc();
                     }
 
                     totalimport++;
@@ -123,36 +146,4 @@ public class ImportPaymentsPBF {
             }
         }
     }
-
-    public void updatePaymentsPBF(Payments payment, Payments newpayment) {
-        Map map = new HashMap();
-        map.put("_id", payment.getId());
-        Payments query = new PaymentsDAO().findPayment(map);
-
-        new PaymentsDAO().update(query, newpayment);
-
-        Payments newPayments = new PaymentsDAO().findPayment(map);
-        System.out.printf("Old:> " + query + "\nNew:> " + newPayments.toString());
-    }
-
-    public void deletePaymentsPBF(String Id) {
-        Map map = new HashMap();
-        map.put("_id", Id);
-        List query = new PaymentsDAO().findPayments(map);
-
-        for (Iterator it = query.iterator(); it.hasNext();) {
-            Payments payment = (Payments) it.next();
-            new PaymentsDAO().delete(payment);
-        }
-
-    }
-
-    public void searchPaymentsPBF() {
-        List payments = new PaymentsDAO().findPayments();
-        for (Iterator it = payments.iterator(); it.hasNext();) {
-            Payments payment = (Payments) it.next();
-            System.out.println(payment.toString());
-        }
-    }
-
 }

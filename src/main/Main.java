@@ -1,5 +1,8 @@
 package main;
 
+import functions.ImportAllPBF;
+import functions.ImportBeneficiariesPBF;
+import functions.ImportCitiesPBF;
 import functions.ImportPaymentsPBF;
 
 /**
@@ -16,7 +19,7 @@ public class Main {
             @Override
             public void run() {
                 long StartTime = System.currentTimeMillis();
-                ImportPaymentsPBF impDB = new ImportPaymentsPBF();
+                ImportAllPBF impDB = new ImportAllPBF();
                 impDB.importAllPBF();
                 System.gc();
                 long EndTime = System.currentTimeMillis();
@@ -28,12 +31,12 @@ public class Main {
                 System.exit(0);
             }
         };
-        
+
         Thread impCities = new Thread() {
             @Override
             public void run() {
                 long StartTime = System.currentTimeMillis();
-                ImportPaymentsPBF impDB = new ImportPaymentsPBF();
+                ImportCitiesPBF impDB = new ImportCitiesPBF();
                 impDB.importCities();
                 System.gc();
                 long EndTime = System.currentTimeMillis();
@@ -45,12 +48,12 @@ public class Main {
                 System.exit(0);
             }
         };
-        
+
         Thread impPBFBeneficiaries = new Thread() {
             @Override
             public void run() {
                 long StartTime = System.currentTimeMillis();
-                ImportPaymentsPBF impDB = new ImportPaymentsPBF();
+                ImportBeneficiariesPBF impDB = new ImportBeneficiariesPBF();
                 impDB.importBeneficiariesPBF();
                 System.gc();
                 long EndTime = System.currentTimeMillis();
@@ -62,7 +65,7 @@ public class Main {
                 System.exit(0);
             }
         };
-        
+
         Thread impPBFPayments = new Thread() {
             @Override
             public void run() {
@@ -79,10 +82,10 @@ public class Main {
                 System.exit(0);
             }
         };
-        
+
         //impPBFAll.start();
-        impCities.start();
-        impPBFBeneficiaries.start();
+        //impCities.start();
+        //impPBFBeneficiaries.start();
         impPBFPayments.start();
     }
 

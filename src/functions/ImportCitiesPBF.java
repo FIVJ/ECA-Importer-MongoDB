@@ -1,6 +1,6 @@
 package functions;
 
-import dao.PaymentsDAO;
+import dao.CitiesDAO;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,21 +9,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import model.Payments;
+import model.Cities;
 import org.apache.log4j.Logger;
 
 /**
  *
  * @author tassio
  */
-public class ImportPaymentsPBF {
+public class ImportCitiesPBF {
 
     Logger logger = Logger.getLogger("Functions");
 
-    public void importPaymentsPBF() {
+    public void importCities() {
         logger.trace("Starting Method importPaymentsPBF");
         File fInput = new File("/Users/tassio/NetBeansProjects/ECA-Importer-MongoDB/CSV/Pagamentos");
         BufferedReader br = null;
@@ -73,29 +71,26 @@ public class ImportPaymentsPBF {
                                 break;
                         }
 
-                        int action = Integer.parseInt(data[6]);
-                        String nis = data[7];
-                        String beneficiary = data[8].toUpperCase();
                         String siafi = data[1];
                         String city = data[2].toUpperCase();
-                        String file = fileCSV.getName().toUpperCase();
-                        String month = fileCSV.getName().substring(4, 6);
-                        String year = fileCSV.getName().substring(0, 4);
-                        int function = Integer.parseInt(data[3]);
-                        int program = Integer.parseInt(data[5]);
-                        String source = data[9].toUpperCase();
                         String state = data[0].toUpperCase();
-                        int subFunction = Integer.parseInt(data[4]);
-                        double value = Double.parseDouble(data[10]);
 
-                        Payments payment = new Payments(action, nis, beneficiary, siafi, city, state, region, file, month, year, function, program, source, subFunction, value);
+                        Map mapCity = new HashMap();
+                        mapCity.put("Siafi", siafi);
+                        Cities ct = new CitiesDAO().findCity(mapCity);
+                        if (ct == null) {
+                            Cities nCity = new Cities();
+                            nCity.setSiafi(siafi);
+                            nCity.setRegion(region);
+                            nCity.setState(state);
+                            nCity.setCity(city);
+                            new CitiesDAO().save(nCity);
+                        }
 
-                        new PaymentsDAO().save(payment);
                     }
 
                     if (totalimport % 10000 == 0) {
                         System.out.println("Imports = " + totalimport);
-                        System.gc();
                     }
 
                     totalimport++;
@@ -123,36 +118,4 @@ public class ImportPaymentsPBF {
             }
         }
     }
-
-    public void updatePaymentsPBF(Payments payment, Payments newpayment) {
-        Map map = new HashMap();
-        map.put("_id", payment.getId());
-        Payments query = new PaymentsDAO().findPayment(map);
-
-        new PaymentsDAO().update(query, newpayment);
-
-        Payments newPayments = new PaymentsDAO().findPayment(map);
-        System.out.printf("Old:> " + query + "\nNew:> " + newPayments.toString());
-    }
-
-    public void deletePaymentsPBF(String Id) {
-        Map map = new HashMap();
-        map.put("_id", Id);
-        List query = new PaymentsDAO().findPayments(map);
-
-        for (Iterator it = query.iterator(); it.hasNext();) {
-            Payments payment = (Payments) it.next();
-            new PaymentsDAO().delete(payment);
-        }
-
-    }
-
-    public void searchPaymentsPBF() {
-        List payments = new PaymentsDAO().findPayments();
-        for (Iterator it = payments.iterator(); it.hasNext();) {
-            Payments payment = (Payments) it.next();
-            System.out.println(payment.toString());
-        }
-    }
-
 }
